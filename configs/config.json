@@ -1,0 +1,139 @@
+    {
+        "stage_1": {
+            "background_img": "./assets/graphics/background/bg_stage1.jfif",
+            "enemy": {
+                "enemy_img": "./assets/graphics/{0}.png",
+                "max_enemy_speed": 10,
+                "min_enemy_speed": 5,
+                "percentaje_shoot": 100
+            },
+            
+            "player": {
+                "idle_img": [
+                    "./assets/graphics/player/idle/1.png",
+                    "./assets/graphics/player/idle/2.png",
+                    "./assets/graphics/player/idle/3.png",
+                    "./assets/graphics/player/idle/4.png"
+                ],
+                "run_img": [
+                    "./assets/graphics/player/run/1.png",
+                    "./assets/graphics/player/run/2.png",
+                    "./assets/graphics/player/run/3.png",
+                    "./assets/graphics/player/run/4.png",
+                    "./assets/graphics/player/run/5.png",
+                    "./assets/graphics/player/run/6.png",
+                    "./assets/graphics/player/run/7.png",
+                    "./assets/graphics/player/run/8.png",
+                    "./assets/graphics/player/run/9.png"
+                ],
+                "speed": 5
+            },
+            "stage": {
+                "max_amount_enemies": 3,
+                "coords_enemies": [
+                    {
+                        "coord_x": 50,
+                        "coord_y": 200
+                    },
+                    {
+                        "coord_x": 200,
+                        "coord_y": 415
+                    },
+                    {
+                        "coord_x": 400,
+                        "coord_y": 630
+                    }
+                ]
+            }
+        },
+        "stage_2": {
+            "background_img": "./assets/graphics/background/bg_stage2.jpg",
+            "enemy": {
+                "enemy_img": "./assets/graphics/{0}.png",
+                "max_enemy_speed": 10,
+                "min_enemy_speed": 4,
+                "percentaje_shoot": 10
+            },
+            
+            "player": {
+                "player_img": "./assets/graphics/player.png"
+            },
+            "stage": {
+                "max_amount_enemies": 15,
+                "coords_enemies": [
+                    {
+                        "coord_x": 10,
+                        "coord_y": 150
+                    },
+                    {
+                        "coord_x": 40,
+                        "coord_y": 80
+                    },
+                    {
+                        "coord_x": 70,
+                        "coord_y": 20
+                    },
+                    {
+                        "coord_x": 100,
+                        "coord_y": 150
+                    },
+                    {
+                        "coord_x": 130,
+                        "coord_y": 80
+                    },
+                    {
+                        "coord_x": 160,
+                        "coord_y": 20
+                    },
+                    {
+                        "coord_x": 190,
+                        "coord_y": 150
+                    },
+                    {
+                        "coord_x": 220,
+                        "coord_y": 80
+                    },
+                    {
+                        "coord_x": 250,
+                        "coord_y": 20
+                    },
+                    {
+                        "coord_x": 280,
+                        "coord_y": 150
+                    },
+                    {
+                        "coord_x": 310,
+                        "coord_y": 80
+                    },
+                    {
+                        "coord_x": 340,
+                        "coord_y": 20
+                    },
+                    {
+                        "coord_x": 50,
+                        "coord_y": 150
+                    },
+                    {
+                        "coord_x": 200,
+                        "coord_y": 80
+                    },
+                    {
+                        "coord_x": 400,
+                        "coord_y": 20
+                    },
+                    {
+                        "coord_x": 50,
+                        "coord_y": 150
+                    },
+                    {
+                        "coord_x": 200,
+                        "coord_y": 80
+                    },
+                    {
+                        "coord_x": 400,
+                        "coord_y": 20
+                    }
+                ]
+            }
+        }
+    }
