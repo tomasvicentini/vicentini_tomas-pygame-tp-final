@@ -8,7 +8,8 @@ class Stage:
 
         # Jugador
         self.__configs = open_configs().get(stage_name)
-        self.player_sprite = Player((limit_w / 2, limit_h),limit_w, self.__configs)  # posicion inicial
+        player_coords = self.__configs.get('player').get('coord_player')[0]
+        self.player_sprite = Player((player_coords.get("coord_x"), player_coords.get("coord_y")), limit_w, self.__configs) # posicion inicial
         self.player = pygame.sprite.GroupSingle(self.player_sprite)
         self.enemies = pygame.sprite.Group()
         self.__stage_configs = self.__configs.get('stage')

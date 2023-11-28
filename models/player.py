@@ -8,10 +8,10 @@ class Player(pygame.sprite.Sprite):
 
         self.__player_configs = stage_dict_configs.get('player')
         # Sprite del jugador movimiento
-        self.move_images = [pygame.image.load(image).convert_alpha() for image in self.__player_configs["run_img"]]
+        self.move_images = [pygame.image.load(image).convert_alpha() for image in self.__player_configs['run_img']]
 
         # Sprite del jugador iddle
-        self.idle_images = [pygame.image.load(image).convert_alpha() for image in self.__player_configs["idle_img"]]
+        self.idle_images = [pygame.image.load(image).convert_alpha() for image in self.__player_configs['idle_img']]
 
         # Establecer la imagen actual
         self.image = self.idle_images[0]
@@ -19,7 +19,7 @@ class Player(pygame.sprite.Sprite):
         self.original_image = self.image
 
         # Atributos de movimiento
-        self.speed = self.__player_configs["speed"]
+        self.speed = self.__player_configs['speed']
         self.max_x_constraint = constraint
 
         # Atributos para disparar y recargar
@@ -30,6 +30,7 @@ class Player(pygame.sprite.Sprite):
         self.puntaje = 0
         self.is_moving = False
         self.animacion_contador = 0
+        self.move_right = True
 
     def manejar_eventos_teclado(self):  # Eventos del jugador
         """
@@ -46,13 +47,19 @@ class Player(pygame.sprite.Sprite):
         if keys[pygame.K_RIGHT]:
             self.rect.x += self.speed
             self.image = self.move_images[self.animacion_contador // 5]
+            self.move_right = True
         elif keys[pygame.K_LEFT]:
             self.rect.x -= self.speed
             self.image = pygame.transform.flip(self.move_images[self.animacion_contador // 5], True, False)
+            self.move_right = False
         else:
-            # No se está moviendo
-            self.animacion_contador = (self.animacion_contador + 1) % (len(self.idle_images) * 30)
-            self.image = self.idle_images[self.animacion_contador // 30]
+            if self.move_right:
+                # No se está moviendo
+                self.animacion_contador = (self.animacion_contador + 1) % (len(self.idle_images) * 30)
+                self.image = self.idle_images[self.animacion_contador // 30]
+            else:
+                self.animacion_contador = (self.animacion_contador + 1) % (len(self.idle_images) * 30)
+                self.image = pygame.transform.flip(self.idle_images[self.animacion_contador // 30], True, False)
             
             if not is_moving_previous:
                 # Si no se estaba moviendo antes, ajustar la imagen para que mire en la dirección correcta
@@ -68,13 +75,11 @@ class Player(pygame.sprite.Sprite):
         return self.bullet_group
     
     def shoot_laser(self):  # disparar laser
-        print('!piu piu!')
-        print(f"{self.speed}")
         self.bullet_group.add(self.create_bullet())
 
     def create_bullet(self):
-        direction = 'right' if self.speed > 0 else 'left'
-        return Bullet(self.rect.centerx, self.rect.top, direction, True)
+        direction = 'right' if self.move_right else 'left'
+        return Bullet(self.rect.centerx, self.rect.top+20, direction, True)
         
     def recharge(self):
         if not self.ready:

@@ -2,10 +2,19 @@
         "stage_1": {
             "background_img": "./assets/graphics/background/bg_stage1.jfif",
             "enemy": {
+                "run_img": [
+                    "./assets/graphics/enemy/run/1.png",
+                    "./assets/graphics/enemy/run/2.png",
+                    "./assets/graphics/enemy/run/3.png",
+                    "./assets/graphics/enemy/run/4.png",
+                    "./assets/graphics/enemy/run/5.png",
+                    "./assets/graphics/enemy/run/6.png",
+                    "./assets/graphics/enemy/run/7.png",
+                    "./assets/graphics/enemy/run/8.png"
+                ],
                 "enemy_img": "./assets/graphics/{0}.png",
                 "max_enemy_speed": 10,
-                "min_enemy_speed": 5,
-                "percentaje_shoot": 100
+                "min_enemy_speed": 5
             },
             
             "player": {
@@ -26,22 +35,32 @@
                     "./assets/graphics/player/run/8.png",
                     "./assets/graphics/player/run/9.png"
                 ],
-                "speed": 5
+                "speed": 5,
+                "coord_player": [
+                    {
+                        "coord_x": 50,
+                        "coord_y": 845
+                    }
+                ]              
             },
             "stage": {
-                "max_amount_enemies": 3,
+                "max_amount_enemies": 4,
                 "coords_enemies": [
                     {
                         "coord_x": 50,
-                        "coord_y": 200
+                        "coord_y": 195
                     },
                     {
                         "coord_x": 200,
-                        "coord_y": 415
+                        "coord_y": 410
                     },
                     {
                         "coord_x": 400,
-                        "coord_y": 630
+                        "coord_y": 625
+                    },
+                    {
+                        "coord_x": 400,
+                        "coord_y": 845
                     }
                 ]
             }
