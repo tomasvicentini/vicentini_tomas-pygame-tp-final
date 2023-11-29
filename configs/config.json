@@ -35,6 +35,10 @@
                     "./assets/graphics/player/run/8.png",
                     "./assets/graphics/player/run/9.png"
                 ],
+                "fire_img": [
+                    "./assets/graphics/player/fire/1.png",
+                    "./assets/graphics/player/fire/2.png"
+                ],
                 "speed": 5,
                 "coord_player": [
                     {
