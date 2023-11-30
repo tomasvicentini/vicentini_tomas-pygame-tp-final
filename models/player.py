@@ -33,6 +33,7 @@ class Player(pygame.sprite.Sprite):
         self.puntaje = 0
         self.is_moving = False
         self.animacion_contador = 0
+        self.space_pressed = False
         
 
     def manejar_eventos_teclado(self):  # Eventos del jugador
@@ -62,7 +63,7 @@ class Player(pygame.sprite.Sprite):
             if not is_moving_previous:
                 self.image = pygame.transform.flip(self.image, keys[pygame.K_LEFT], False)
 
-        if keys[pygame.K_SPACE]:
+        if keys[pygame.K_SPACE] and not self.space_pressed:
             self.shoot_laser()
             self.ready = False
             self.laser_time = pygame.time.get_ticks()
@@ -71,7 +72,10 @@ class Player(pygame.sprite.Sprite):
                 self.image = self.fire_images[self.animacion_contador // self.animation_speed_fire]                
             else:
                 self.animacion_contador = (self.animacion_contador + 1) % (len(self.fire_images) * self.animation_speed_fire)
-                self.image = pygame.transform.flip(self.fire_images[self.animacion_contador // self.animation_speed_fire], True, False)             
+                self.image = pygame.transform.flip(self.fire_images[self.animacion_contador // self.animation_speed_fire], True, False)    
+
+        if not keys[pygame.K_SPACE]:
+            self.space_pressed = False         
 
     @property
     def get_bullets(self) -> list[Bullet]:
