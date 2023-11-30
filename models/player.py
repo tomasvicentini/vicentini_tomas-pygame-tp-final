@@ -65,6 +65,7 @@ class Player(pygame.sprite.Sprite):
 
         if keys[pygame.K_SPACE] and not self.space_pressed:
             self.shoot_laser()
+            self.space_pressed = True
             self.ready = False
             self.laser_time = pygame.time.get_ticks()
             if self.move_right:
