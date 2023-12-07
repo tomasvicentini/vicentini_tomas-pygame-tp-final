@@ -11,6 +11,7 @@ class Enemy(pygame.sprite.Sprite):
 
         # Mostrar sprite del enemigo
         self.move_images = [pygame.image.load(image).convert_alpha() for image in self.__enemy_configs['run_img']]
+        self.dead_images = [pygame.image.load(image).convert_alpha() for image in self.__enemy_configs['dead_img']]
         self.image_index = 0
         self.image = self.move_images[self.image_index]
         self.image.set_colorkey(WHITE)
@@ -22,6 +23,8 @@ class Enemy(pygame.sprite.Sprite):
         self.max_y_constraint = constraint_y
         self.frame_rate = 200
         self.time_move = 0
+        self.animation_speed = 3
+        self.animacion_contador = 0
         self.move_right = True
         self.bullet_group = pygame.sprite.Group()
         self.clock = pygame.time.Clock()
@@ -50,8 +53,10 @@ class Enemy(pygame.sprite.Sprite):
     def do_movement(self, delta_ms):
         self.time_move += delta_ms
         if self.time_move >= self.frame_rate:
-            self.image_index = (self.image_index + 1) % len(self.move_images)
-            self.image = self.move_images[self.image_index]
+            self.animacion_contador = (self.animacion_contador + 1) % (len(self.move_images) * self.animation_speed)
+            #self.image_index = (self.image_index + 1) % len(self.move_images)
+            #self.image = self.move_images[self.image_index]
+            self.image = self.move_images[self.animacion_contador // self.animation_speed]
             self.image.set_colorkey(WHITE)
             self.constraint()
 

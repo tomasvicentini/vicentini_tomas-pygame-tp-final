@@ -1,7 +1,16 @@
 import json
+import pygame
+
+
+#pygame.init()
+#screen_info = pygame.display.Info()
+#screen_w = screen_info.current_w
+#screen_h = screen_info.current_h
 
 screen_w = 736
 screen_h = 858
+
+FPS= 30
 
 #Definir colores
 BLACK = (0,0,0)

@@ -1,6 +1,26 @@
     {
+        "menu": {
+            "font_title_path": "./fonts/Alien_Resurrection.ttf",
+            "font_menu_path":"./fonts/Roboto-Regular.ttf"
+        },
+
         "stage_1": {
             "background_img": "./assets/graphics/background/bg_stage1.jfif",
+            "floor": [
+                {"x": 0, "y":198, "w":618, "h":3},
+                {"x": 658, "y":198, "w":78, "h":3},
+                {"x": 0, "y":412, "w":85, "h":3},
+                {"x": 115, "y":412, "w":615, "h":3},
+                {"x": 0, "y":627, "w":623, "h":3},
+                {"x": 654, "y":627, "w":82, "h":3},
+                {"x": 0, "y":843, "w":77, "h":3},
+                {"x": 122, "y":843, "w":614, "h":3}
+            ],
+            "ladders": [
+                {"x": 623, "y":628, "w":1, "h":165},
+                {"x": 85, "y":413, "w":1, "h":165},
+                {"x": 618, "y":203, "w":1, "h":165}
+            ],
             "enemy": {
                 "run_img": [
                     "./assets/graphics/enemy/run/1.png",
@@ -12,9 +32,19 @@
                     "./assets/graphics/enemy/run/7.png",
                     "./assets/graphics/enemy/run/8.png"
                 ],
+                "dead_img": [
+                    "./assets/graphics/enemy/run/1.png",
+                    "./assets/graphics/enemy/run/2.png",
+                    "./assets/graphics/enemy/run/3.png",
+                    "./assets/graphics/enemy/run/4.png",
+                    "./assets/graphics/enemy/run/5.png",
+                    "./assets/graphics/enemy/run/6.png",
+                    "./assets/graphics/enemy/run/7.png",
+                    "./assets/graphics/enemy/run/8.png"
+                ],
                 "enemy_img": "./assets/graphics/{0}.png",
-                "max_enemy_speed": 10,
-                "min_enemy_speed": 5
+                "max_enemy_speed": 8,
+                "min_enemy_speed": 6
             },
             
             "player": {
@@ -39,11 +69,28 @@
                     "./assets/graphics/player/fire/1.png",
                     "./assets/graphics/player/fire/2.png"
                 ],
-                "speed": 5,
+                "jump_img": [
+                    "./assets/graphics/player/jump/1.png",
+                    "./assets/graphics/player/jump/2.png",
+                    "./assets/graphics/player/jump/3.png"
+                ],
+                "up_img": [
+                    "./assets/graphics/player/up/1.png",
+                    "./assets/graphics/player/up/2.png",
+                    "./assets/graphics/player/up/3.png",
+                    "./assets/graphics/player/up/4.png",
+                    "./assets/graphics/player/up/5.png",
+                    "./assets/graphics/player/up/6.png",
+                    "./assets/graphics/player/up/7.png",
+                    "./assets/graphics/player/up/8.png"
+                ],
+                "speed": 4,
+                "speed_jump": 20,
+                "speed_ladder": 1,
                 "coord_player": [
                     {
-                        "coord_x": 50,
-                        "coord_y": 845
+                        "coord_x": 500,
+                        "coord_y": 750
                     }
                 ]              
             },

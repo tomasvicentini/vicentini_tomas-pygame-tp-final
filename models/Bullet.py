@@ -12,7 +12,7 @@ class Bullet(pygame.sprite.Sprite):
         if img_path:
             image_bullet = pygame.image.load('./assets/graphics/player_laser.png').convert_alpha()
             self.image = pygame.transform.scale(image_bullet, (10, 2))
-        else: 
+        else:
             self.image = pygame.Surface((1, 4))
             self.image.fill('white')
 
