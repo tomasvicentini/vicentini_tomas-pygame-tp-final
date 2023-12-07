@@ -114,6 +114,6 @@ class Stage:
             self.player_sprite.lock_ladder = False
 
         for floor_rect in self.floor_class:
-            print(self.player_sprite.handle_vertical_collision(floor_rect, self.ladders_class, self.player_sprite.y_speed))
+            self.player_sprite.handle_vertical_collision(floor_rect, self.ladders_class, self.player_sprite.y_speed)
 
         

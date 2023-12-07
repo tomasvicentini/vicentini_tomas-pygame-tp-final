@@ -85,7 +85,7 @@
                     "./assets/graphics/player/up/8.png"
                 ],
                 "speed": 4,
-                "speed_jump": 20,
+                "speed_jump": 2,
                 "speed_ladder": 1,
                 "coord_player": [
                     {

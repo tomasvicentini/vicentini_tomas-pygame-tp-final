@@ -36,12 +36,12 @@ class Player(pygame.sprite.Sprite):
         self.animation_speed_move = 5
         self.animation_speed_jump = 5
 
-        # GRAVEDAD
+        # GRAVEDAD - SALTO
         self.fall_count = 0
         self.gravity = 1
-        #####################################
-        #self.move_right = True
-        self.jump_height = 7
+        self.jump_count = 0
+        self.jump_height = 3
+        self.is_jumping = False
         
         #self.is_jumping = False
         self.speed_jump = self.__player_configs['speed_jump']
@@ -117,7 +117,6 @@ class Player(pygame.sprite.Sprite):
         self.x_vel = 0
         self.y_speed = 0
 
-        print(f"ladder:{self.on_ladder} | y_speed:{self.y_speed} | gravi: {self.gravity}")
         if self.on_ladder:
             if keys[pygame.K_UP]:
                 self.move_up(self.speed_ladder)
@@ -128,11 +127,13 @@ class Player(pygame.sprite.Sprite):
                 self.move_left(self.speed)
             if keys[pygame.K_RIGHT]:
                 self.move_right(self.speed)
-            if keys[pygame.K_SPACE]:
-                self.saltar(self.speed)
+            if keys[pygame.K_SPACE] and not self.space_pressed and self.jump_count < 2:
+                self.is_jumping = True
+                self.jump()
             if keys[pygame.K_LCTRL] and not self.space_pressed:
-                self.shoot()            
-        if not keys[pygame.K_LCTRL]:
+                self.shoot()   
+                 
+        if not keys[pygame.K_LCTRL] or not keys[pygame.K_SPACE]:
             self.space_pressed = False  
         
         if not self.on_ladder:
@@ -190,8 +191,21 @@ class Player(pygame.sprite.Sprite):
                 self.animacion_contador = (self.animacion_contador + 1) % (len(self.idle_images) * self.animation_speed_idle)
                 self.image = pygame.transform.flip(self.idle_images[self.animacion_contador // self.animation_speed_idle], True, False)
     
-    def saltar(self, speed):
-        pass
+    def jump(self):
+        self.y_speed = -self.gravity * self.speed_jump
+        self.animacion_contador = 0
+        self.jump_count += 1
+
+        if self.jump_count == 1:
+            self.fall_count = 0
+        if self.direction == "right":
+            self.image = self.jump_images[0]
+        if self.direction == "left":
+            self.image = pygame.transform.flip(self.jump_images[0], True, False)         
+
+
+
+        print(f"jump_count:{self.jump_count} | fall_count:{self.fall_count} | y_speed: {self.y_speed}| gravity: {self.gravity}") 
 
     def landed(self):
         self.fall_count = 0
