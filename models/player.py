@@ -1,18 +1,44 @@
 import pygame
+import pygame.mixer
 from models.Bullet import Bullet
-from auxiliar.constantes import (FPS)
-
+from auxiliar.constantes import (open_configs,FPS, WHITE)
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos, constraint, stage_dict_configs: dict):
         super().__init__()
-        self.__player_configs = stage_dict_configs.get('player')
+        pygame.mixer.init()
         
+        self.__player_configs = stage_dict_configs.get('player')
+
+        # SONIDOS
+        self.__sounds = open_configs().get('sounds')
+        self.sound_gun_path = self.__sounds['gun']
+        self.sound_gun = pygame.mixer.Sound(self.sound_gun_path)
+        self.sound_gun.set_volume(self.__sounds['volume'])
+        self.chanel_gun = pygame.mixer.Channel(3)
+        
+        self.sound_ladder_path = self.__sounds['ladder']
+        self.sound_ladder = pygame.mixer.Sound(self.sound_ladder_path)
+        self.sound_ladder.set_volume(self.__sounds['volume']*2)
+        self.chanel_ladder = pygame.mixer.Channel(2)
+
+        self.sound_steps_path = self.__sounds['steps']
+        self.sound_steps = pygame.mixer.Sound(self.sound_steps_path)
+        self.sound_steps.set_volume(0)
+        self.chanel_steps = pygame.mixer.Channel(1)
+
+        self.sound_dead_path = self.__sounds['dead']
+        self.sound_dead = pygame.mixer.Sound(self.sound_dead_path)
+        self.sound_dead.set_volume(self.__sounds['volume']*2)
+        self.chanel_dead = pygame.mixer.Channel(4)
+        self.scream = True
+              
         self.move_images = [pygame.image.load(image).convert_alpha() for image in self.__player_configs['run_img']] # Sprite player run
         self.idle_images = [pygame.image.load(image).convert_alpha() for image in self.__player_configs['idle_img']] # Sprite player iddle
         self.fire_images = [pygame.image.load(image).convert_alpha() for image in self.__player_configs['fire_img']] # Sprite player fire
         self.jump_images = [pygame.image.load(image).convert_alpha() for image in self.__player_configs['jump_img']] # Sprite player jump
         self.up_images = [pygame.image.load(image).convert_alpha() for image in self.__player_configs['up_img']] # Sprite player up
+        self.dead_images = [pygame.image.load(image).convert_alpha() for image in self.__player_configs['dead_img']] # Sprite player dead
 
         # Establecer la imagen actual
         self.image = self.idle_images[0]
@@ -25,20 +51,27 @@ class Player(pygame.sprite.Sprite):
         self.max_x_constraint = constraint
         
         #NUEVOS METODOS
-        self.direction = "right"
+        self.direction = self.__player_configs["direction"]
         #self.animation_count = 0
         self.x_vel = 0
         self.y_speed = 0
         self.is_moving = False
+        self.space_pressed = False
+        self.up_pressed = False
+        self.move_pressed = False
+        self.on_ladder_floor = False
+        self.on_ground = False
         self.animacion_contador = 0
         self.animation_speed_idle = 30
         self.animation_speed_fire = 15
         self.animation_speed_move = 5
         self.animation_speed_jump = 5
+        self.animation_speed_up = 1
+        self.animation_dead = 1
 
         # GRAVEDAD - SALTO
         self.fall_count = 0
-        self.gravity = 1
+        self.gravity = 1.5
         self.jump_count = 0
         self.jump_height = 3
         self.is_jumping = False
@@ -54,9 +87,6 @@ class Player(pygame.sprite.Sprite):
         self.bullet_group = pygame.sprite.Group()
         self.puntaje = 0
 
-        
-        self.space_pressed = False
-
         # Pisos
         self.on_floor = False
         self.floor_class = []
@@ -65,7 +95,9 @@ class Player(pygame.sprite.Sprite):
         self.on_ladder = False
         self.lock_ladder = False
 
-
+        # Vida
+        self.health = 100
+        self.is_dead = False
 
     @property
     def get_bullets(self) -> list[Bullet]:
@@ -91,23 +123,23 @@ class Player(pygame.sprite.Sprite):
     
     def handle_vertical_collision(self, floor_rect, ladder_rects, dy):
         player_rect = self.rect
+        
         if player_rect.colliderect(floor_rect):
             if dy > 0:
                 self.rect.bottom = floor_rect.top
                 self.landed()
+                self.on_ground = True
             elif dy < 0:
                 self.rect.top = floor_rect.bottom
-                self.hit_head()
+                #self.hit_head()
         else:
             self.rect.y += dy
 
         for ladder_rect in ladder_rects:
             if player_rect.colliderect(ladder_rect):
-                # Ajustar la posición horizontal del jugador en la escalera
-                self.rect.x = ladder_rect.x
-
+                #self.rect.x = ladder_rect.x
+                self.on_ladder = True
                 if not self.on_ladder:
-                    # Si no está en una escalera, ajustar la posición vertical
                     self.rect.y += dy
                 return True
 
@@ -117,23 +149,43 @@ class Player(pygame.sprite.Sprite):
         self.x_vel = 0
         self.y_speed = 0
 
+        if self.on_ground:
+            if keys[pygame.K_LEFT] or keys[pygame.K_RIGHT]:
+                self.sound_steps.play()
+            else:
+                self.sound_steps.stop()
+                self.move_pressed = False
+
+            if keys[pygame.K_LEFT]:
+                self.move_pressed = True
+                self.move_left(self.speed)
+            elif keys[pygame.K_RIGHT]:
+                self.move_pressed = True
+                self.move_right(self.speed)
+            if not self.on_ladder:
+                if keys[pygame.K_SPACE] and not self.space_pressed and self.jump_count < 2:
+                    self.is_jumping = True
+                    self.jump()
+                if keys[pygame.K_LCTRL] and not self.space_pressed:
+                    self.shoot()   
+        
         if self.on_ladder:
             if keys[pygame.K_UP]:
+                if not self.up_pressed:
+                    self.chanel_ladder.play(self.sound_ladder)
+                self.up_pressed = True
                 self.move_up(self.speed_ladder)
-            if keys[pygame.K_DOWN]:
+            elif keys[pygame.K_DOWN]:
+                if not self.up_pressed:
+                    self.chanel_ladder.play(self.sound_ladder)
+                self.up_pressed = True
                 self.move_down(self.speed_ladder)
-        else:
-            if keys[pygame.K_LEFT]:
-                self.move_left(self.speed)
-            if keys[pygame.K_RIGHT]:
-                self.move_right(self.speed)
-            if keys[pygame.K_SPACE] and not self.space_pressed and self.jump_count < 2:
-                self.is_jumping = True
-                self.jump()
-            if keys[pygame.K_LCTRL] and not self.space_pressed:
-                self.shoot()   
+
+            else:
+                self.chanel_ladder.stop()
+                self.up_pressed = False
                  
-        if not keys[pygame.K_LCTRL] or not keys[pygame.K_SPACE]:
+        if not keys[pygame.K_LCTRL] and not keys[pygame.K_SPACE]:
             self.space_pressed = False  
         
         if not self.on_ladder:
@@ -149,8 +201,9 @@ class Player(pygame.sprite.Sprite):
         if self.direction != "left":
             self.direction = "left"
             self.animacion_contador = 0
-        self.animacion_contador =  (self.animacion_contador + 1) % (len(self.move_images) * self.animation_speed_move)
-        self.image = pygame.transform.flip(self.move_images[self.animacion_contador // self.animation_speed_move], True, False)
+        if not self.is_jumping:
+            self.animacion_contador =  (self.animacion_contador + 1) % (len(self.move_images) * self.animation_speed_move)
+            self.image = pygame.transform.flip(self.move_images[self.animacion_contador // self.animation_speed_move], True, False)
 
     def move_right(self, vel):
         self.x_vel = vel
@@ -158,8 +211,9 @@ class Player(pygame.sprite.Sprite):
         if self.direction != "right":
             self.direction = "right"
             self.animacion_contador = 0
-        self.animacion_contador = (self.animacion_contador + 1) % (len(self.move_images) * self.animation_speed_move)
-        self.image = self.move_images[self.animacion_contador // self.animation_speed_move]
+        if not self.is_jumping:
+            self.animacion_contador = (self.animacion_contador + 1) % (len(self.move_images) * self.animation_speed_move)
+            self.image = self.move_images[self.animacion_contador // self.animation_speed_move]
 
     def move_up(self, vel):
         self.y_speed = -vel
@@ -168,9 +222,8 @@ class Player(pygame.sprite.Sprite):
         if self.direction != "up":
             self.direction = "up"
             self.animacion_contador = 0
-        self.animacion_contador = (self.animacion_contador + 1) % (len(self.up_images) * self.animation_speed_move)
-        self.image = self.up_images[self.animacion_contador // self.animation_speed_move]
-
+        self.animacion_contador = (self.animacion_contador + 1) % (len(self.up_images) * self.animation_speed_up)
+        self.image = self.up_images[self.animacion_contador // self.animation_speed_up]
 
     def move_down(self, vel):
         self.y_speed = vel
@@ -179,11 +232,11 @@ class Player(pygame.sprite.Sprite):
         if self.direction != "down":
             self.direction = "down"
             self.animacion_contador = 0
-        self.animacion_contador = (self.animacion_contador + 1) % (len(self.up_images) * self.animation_speed_move)
-        self.image = self.up_images[self.animacion_contador // self.animation_speed_move]
+        self.animacion_contador = (self.animacion_contador + 1) % (len(self.up_images) * self.animation_speed_up)
+        self.image = self.up_images[self.animacion_contador // self.animation_speed_up]
 
     def idle(self):
-        if not self.is_moving and self.ready:
+        if not self.is_moving and self.ready and not self.is_jumping:
             if self.direction == "right":
                 self.animacion_contador = (self.animacion_contador + 1) % (len(self.idle_images) * self.animation_speed_idle)
                 self.image = self.idle_images[self.animacion_contador // self.animation_speed_idle]
@@ -192,54 +245,82 @@ class Player(pygame.sprite.Sprite):
                 self.image = pygame.transform.flip(self.idle_images[self.animacion_contador // self.animation_speed_idle], True, False)
     
     def jump(self):
+        if self.direction == "left":
+            self.image = pygame.transform.flip(self.jump_images[0], True, False)   
+        elif self.direction != "left":
+            self.image = self.jump_images[0]
+
         self.y_speed = -self.gravity * self.speed_jump
-        self.animacion_contador = 0
+        #self.animacion_contador = 0
         self.jump_count += 1
 
         if self.jump_count == 1:
             self.fall_count = 0
-        if self.direction == "right":
-            self.image = self.jump_images[0]
-        if self.direction == "left":
-            self.image = pygame.transform.flip(self.jump_images[0], True, False)         
-
-
-
-        print(f"jump_count:{self.jump_count} | fall_count:{self.fall_count} | y_speed: {self.y_speed}| gravity: {self.gravity}") 
 
     def landed(self):
         self.fall_count = 0
         self.y_speed = 0
         self.jump_count = 0
+        self.is_jumping = False 
 
     def hit_head(self):
         self.count = 0
         self.y_speed *= -1
 
     def shoot(self):
+        # SONIDO          
+        self.chanel_gun.play(self.sound_gun)
+        
+        #ANIMACION
+        self.animacion_contador = (self.animacion_contador + 1) % (len(self.fire_images) * self.animation_speed_fire)
         if self.direction == "right":
-            self.shoot_laser()
-            self.space_pressed = True
-            self.ready = False
-            self.laser_time = pygame.time.get_ticks()
-            self.animacion_contador = (self.animacion_contador + 1) % (len(self.fire_images) * self.animation_speed_fire)
             self.image = self.fire_images[self.animacion_contador // self.animation_speed_fire]                
-        if self.direction == "left":
-            self.shoot_laser()
-            self.space_pressed = True
-            self.ready = False
-            self.laser_time = pygame.time.get_ticks()
-            self.animacion_contador = (self.animacion_contador + 1) % (len(self.fire_images) * self.animation_speed_fire)
-            self.image = pygame.transform.flip(self.fire_images[self.animacion_contador // self.animation_speed_fire], True, False)   
+        elif self.direction == "left":
+            self.image = pygame.transform.flip(self.fire_images[self.animacion_contador // self.animation_speed_fire], True, False)
+        self.shoot_laser()
+        self.space_pressed = True
+        self.ready = False
+        self.laser_time = pygame.time.get_ticks()       
+
+    def steps(self):
+        if self.move_pressed:
+            self.chanel_steps.play(self.sound_steps, -1)
+        else:
+            self.chanel_steps.stop()
+
+    def do_dead(self):
+        if self.animacion_contador == len(self.dead_images)-1:
+            if self.direction == 'right':
+                self.image = self.dead_images[-1]   
+            else: 
+                self.image = pygame.transform.flip(self.dead_images[-1], True, False)
+            self.image.set_colorkey(WHITE)     
+            if self.scream:
+                self.chanel_dead.play(self.sound_dead)
+                self.scream = False
+        else:
+            if self.animacion_contador < len(self.dead_images) * self.animation_dead:
+                self.image = self.dead_images[self.animacion_contador // self.animation_dead]
+                if not self.move_right:
+                    self.image = pygame.transform.flip(self.image, True, False)
+                self.image.set_colorkey(WHITE)
+                self.animacion_contador += 1
+            else:
+                self.animacion_contador = 0
+
 
     def update(self, screen: pygame.surface.Surface):
-        if not self.on_ladder:
-            self.y_speed += min(1, (self.fall_count / FPS) * self.gravity)
-        self.handle_move()
-        self.move(self.x_vel, self.y_speed)  
-        self.idle()
-        self.constraint()
-        self.recharge()
-        self.bullet_group.draw(screen)
-        self.bullet_group.update()
-        self.fall_count += 1
+        if self.is_dead:
+            self.do_dead()
+        else:
+            if not self.on_ladder:
+                self.y_speed += min(1, (self.fall_count / FPS) * self.gravity)
+            self.recharge()
+            self.bullet_group.draw(screen)
+            self.bullet_group.update()
+            self.fall_count += 1
+            self.handle_move()
+            self.move(self.x_vel, self.y_speed)  
+            self.idle()
+            self.constraint()
+            self.steps()
