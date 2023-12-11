@@ -6,7 +6,7 @@ from models.enemy import Enemy
 class Stage:
     def __init__(self, screen: pygame.surface.Surface, limit_w, limit_h, stage_name: str):
 
-        self.__player_win = False
+        self.__player_win = True
         self.__player_lost = False
         self.__configs = open_configs().get(stage_name)
         self.__configs_menu = open_configs().get("menu")
@@ -155,11 +155,11 @@ class Stage:
         
         #DIBUJAR PISOS
         for floor_rect in self.floor_class:
-            pygame.draw.rect(self.__main_screen, BLACK, floor_rect, 2)
+            pygame.draw.rect(self.__main_screen, RED, floor_rect, 2)
 
         #DIBUJAR ESCALERAS
         for ladder_rect in self.ladders_class:
-            pygame.draw.rect(self.__main_screen, BLACK, ladder_rect, 2)
+            pygame.draw.rect(self.__main_screen, RED, ladder_rect, 2)
 
         for ladder_rect in self.ladders_class:
             if self.player_sprite.rect.colliderect(ladder_rect):

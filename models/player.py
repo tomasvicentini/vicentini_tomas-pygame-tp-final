@@ -125,12 +125,13 @@ class Player(pygame.sprite.Sprite):
         player_rect = self.rect
         
         if player_rect.colliderect(floor_rect):
-            if dy > 0:
+            if dy > 0 and not self.on_ladder:
                 self.rect.bottom = floor_rect.top
                 self.landed()
                 self.on_ground = True
-            elif dy < 0:
-                self.rect.top = floor_rect.bottom
+
+            #elif dy < 0:
+            #    self.rect.top = floor_rect.bottom
                 #self.hit_head()
         else:
             self.rect.y += dy

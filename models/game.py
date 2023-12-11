@@ -147,7 +147,7 @@ class Game:
 
             keys = pygame.key.get_pressed()
             if game_stage._Stage__player_win and self.current_stage != 'win':
-                game_stage.sound_destruct.stop()
+                #game_stage.sound_destruct.stop()
 
                 if keys[pygame.K_SPACE]:
                     self.flow_stages()
