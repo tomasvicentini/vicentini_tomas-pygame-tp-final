@@ -2,11 +2,14 @@
         "menu": {
             "font_title_path": "./fonts/Alien_Resurrection.ttf",
             "font_menu_path":"./fonts/Roboto-Regular.ttf",
+            "font_text_path":"./fonts/pulserifleleft.ttf",
+            "pause_menu": "./assets/graphics/menu/pause_menu.png",
             "background_menu": "./assets/graphics/menu/menu.jpg"
         },
         "sounds": {
+            "volume": 0.8,
             "gun": "./assets/sounds/M41A_Rifle.mp3",
-            "volume": 0,
+            "gun_empty": "./assets/sounds/pulse_rifle_no_ammo.wav",
             "ambient": "./assets/sounds/The Medbay.mp3",
             "menu": "./assets/sounds/menu.ogg",
             "destruct_sequence": "./assets/sounds/destruct sequence_5_min.mp3",
@@ -14,7 +17,23 @@
             "steps": "./assets/sounds/footsteps.mp3",
             "dead_alien": "./assets/sounds/dead_sound.ogg",
             "dead": "./assets/sounds/scream1.ogg",
-            "winner": "./assets/sounds/This is Ripley.mp3"
+            "damage_player": "./assets/sounds/damage_player.ogg",
+            "alien_scream":"./assets/sounds/alien_scream.ogg",
+            "player_insultando": "./assets/sounds/",
+            "winner": "./assets/sounds/This is Ripley.mp3",
+            "pickup_ammo": "./assets/sounds/pickup_ammo.wav",
+            "fire_shoot": "./assets/sounds/fire_shot.wav"
+        },
+        "item": {
+            "item_health": "./assets/graphics/items/health.png",
+            "item_ammo": "./assets/graphics/items/item_ammo.png",
+            "fire": [
+                "./assets/graphics/items/1.png",
+                "./assets/graphics/items/2.png",
+                "./assets/graphics/items/3.png",
+                "./assets/graphics/items/4.png"
+            ]
+
         },
 
         "stage_1": {
@@ -124,6 +143,26 @@
                     {
                         "coord_x": 400,
                         "coord_y": 845
+                    }
+                ],
+                "coords_item": [
+                    {                        
+                        "coord_x": 250,
+                        "coord_y": 150
+                    },
+                    {                        
+                        "coord_x": 150,
+                        "coord_y": 790
+                    }
+                ],
+                "coords_fire": [
+                    {                        
+                        "coord_x": 550,
+                        "coord_y": 170
+                    },
+                    {                        
+                        "coord_x": 500,
+                        "coord_y": 600
                     }
                 ]
             }
@@ -235,7 +274,28 @@
                         "coord_x": 50,
                         "coord_y": 773
                     }
+                ],
+                "coords_item": [
+                    {                        
+                        "coord_x": 250,
+                        "coord_y": 449
+                    },
+                    {                        
+                        "coord_x": 250,
+                        "coord_y": 168
+                    }
+                ],
+                "coords_fire": [
+                    {                        
+                        "coord_x": 50,
+                        "coord_y": 182
+                    },
+                    {                        
+                        "coord_x": 550,
+                        "coord_y": 745
+                    }
                 ]
+    
             }
         },
         "stage_3": {
@@ -347,6 +407,22 @@
                         "coord_x": 50,
                         "coord_y": 829
                     }
+                ],
+                "coords_item": [
+                    {                        
+                        "coord_x": 50,
+                        "coord_y": 780
+                    }
+                ],
+                "coords_fire": [
+                    {                        
+                        "coord_x": 450,
+                        "coord_y": 400
+                    },
+                    {                        
+                        "coord_x": 550,
+                        "coord_y": 801
+                    }
                 ]
             }
         },
@@ -365,19 +441,12 @@
             ],
             "enemy": {
                 "run_img": [
-                    "./assets/graphics/enemy/run/1.png",
-                    "./assets/graphics/enemy/run/2.png",
-                    "./assets/graphics/enemy/run/3.png",
-                    "./assets/graphics/enemy/run/4.png",
-                    "./assets/graphics/enemy/run/5.png",
-                    "./assets/graphics/enemy/run/6.png",
-                    "./assets/graphics/enemy/run/7.png",
-                    "./assets/graphics/enemy/run/8.png"
+                    "./assets/graphics/enemy/run/1.png"
+
                 ],
                 "dead_img": [
-                    "./assets/graphics/enemy/dead/1.png",
-                    "./assets/graphics/enemy/dead/2.png",
-                    "./assets/graphics/enemy/dead/3.png"
+                    "./assets/graphics/enemy/dead/1.png"
+
                 ],
                 "enemy_img": "./assets/graphics/{0}.png",
                 "max_enemy_speed": 0,
@@ -386,46 +455,22 @@
             },            
             "player": {
                 "idle_img": [
-                    "./assets/graphics/player/idle/1.png",
-                    "./assets/graphics/player/idle/2.png",
-                    "./assets/graphics/player/idle/3.png",
-                    "./assets/graphics/player/idle/4.png"
+                    "./assets/graphics/player/idle/1.png"
                 ],
                 "run_img": [
-                    "./assets/graphics/player/run/1.png",
-                    "./assets/graphics/player/run/2.png",
-                    "./assets/graphics/player/run/3.png",
-                    "./assets/graphics/player/run/4.png",
-                    "./assets/graphics/player/run/5.png",
-                    "./assets/graphics/player/run/6.png",
-                    "./assets/graphics/player/run/7.png",
-                    "./assets/graphics/player/run/8.png",
-                    "./assets/graphics/player/run/9.png"
+                    "./assets/graphics/player/run/1.png"
                 ],
                 "fire_img": [
-                    "./assets/graphics/player/fire/1.png",
-                    "./assets/graphics/player/fire/2.png"
+                    "./assets/graphics/player/fire/1.png"
                 ],
                 "jump_img": [
-                    "./assets/graphics/player/jump/1.png",
-                    "./assets/graphics/player/jump/2.png",
-                    "./assets/graphics/player/jump/3.png"
+                    "./assets/graphics/player/jump/1.png"
                 ],
                 "up_img": [
-                    "./assets/graphics/player/up/1.png",
-                    "./assets/graphics/player/up/2.png",
-                    "./assets/graphics/player/up/3.png",
-                    "./assets/graphics/player/up/4.png",
-                    "./assets/graphics/player/up/5.png",
-                    "./assets/graphics/player/up/6.png",
-                    "./assets/graphics/player/up/7.png",
-                    "./assets/graphics/player/up/8.png"
+                    "./assets/graphics/player/up/1.png"
                 ],
                 "dead_img": [
-                    "./assets/graphics/player/dead/1.png",
-                    "./assets/graphics/player/dead/2.png",
-                    "./assets/graphics/player/dead/3.png",
-                    "./assets/graphics/player/dead/4.png"
+                    "./assets/graphics/player/dead/1.png"
                 ],
                 "speed": 4,
                 "speed_jump": 2,
@@ -445,8 +490,29 @@
                         "coord_x": -50,
                         "coord_y": 1300
                     }
+                ],
+                "coords_item": [
+                    {                        
+                        "coord_x": 2500,
+                        "coord_y": 5660
+                    },
+                    {                        
+                        "coord_x": 5000,
+                        "coord_y": 8290
+                    }
+                ],
+                "coords_fire": [
+                    {                        
+                        "coord_x": 5000,
+                        "coord_y": 8290
+                    },
+                    {                        
+                        "coord_x": 5000,
+                        "coord_y": 8290
+                    }
                 ]
             }
+            
         }
     }
     

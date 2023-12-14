@@ -16,6 +16,10 @@ class Player(pygame.sprite.Sprite):
         self.sound_gun = pygame.mixer.Sound(self.sound_gun_path)
         self.sound_gun.set_volume(self.__sounds['volume'])
         self.chanel_gun = pygame.mixer.Channel(3)
+
+        self.sound_gun_empty_path = self.__sounds['gun_empty']
+        self.sound_gun_empty = pygame.mixer.Sound(self.sound_gun_empty_path)
+        self.sound_gun_empty.set_volume(self.__sounds['volume'])
         
         self.sound_ladder_path = self.__sounds['ladder']
         self.sound_ladder = pygame.mixer.Sound(self.sound_ladder_path)
@@ -71,7 +75,7 @@ class Player(pygame.sprite.Sprite):
 
         # GRAVEDAD - SALTO
         self.fall_count = 0
-        self.gravity = 1.5
+        self.gravity = 1.8
         self.jump_count = 0
         self.jump_height = 3
         self.is_jumping = False
@@ -99,6 +103,10 @@ class Player(pygame.sprite.Sprite):
         self.health = 100
         self.is_dead = False
 
+        # Municion
+        self.municion = 30
+        self.pause = False
+
     @property
     def get_bullets(self) -> list[Bullet]:
         return self.bullet_group
@@ -107,6 +115,7 @@ class Player(pygame.sprite.Sprite):
         self.bullet_group.add(self.create_bullet())
 
     def create_bullet(self):
+        self.municion -= 1
         return Bullet(self.rect.centerx, self.rect.top+17, self.direction, True)
         
     def recharge(self):
@@ -269,19 +278,23 @@ class Player(pygame.sprite.Sprite):
         self.y_speed *= -1
 
     def shoot(self):
-        # SONIDO          
-        self.chanel_gun.play(self.sound_gun)
-        
         #ANIMACION
         self.animacion_contador = (self.animacion_contador + 1) % (len(self.fire_images) * self.animation_speed_fire)
         if self.direction == "right":
             self.image = self.fire_images[self.animacion_contador // self.animation_speed_fire]                
         elif self.direction == "left":
             self.image = pygame.transform.flip(self.fire_images[self.animacion_contador // self.animation_speed_fire], True, False)
-        self.shoot_laser()
+        
+        if self.municion > 0:
+            # SONIDO          
+            self.chanel_gun.play(self.sound_gun)
+            self.shoot_laser()
+        else:
+            self.chanel_gun.play(self.sound_gun_empty)
         self.space_pressed = True
         self.ready = False
-        self.laser_time = pygame.time.get_ticks()       
+        self.laser_time = pygame.time.get_ticks()      
+
 
     def steps(self):
         if self.move_pressed:
@@ -310,9 +323,11 @@ class Player(pygame.sprite.Sprite):
                 self.animacion_contador = 0
 
 
-    def update(self, screen: pygame.surface.Surface):
+    def update(self, screen: pygame.surface.Surface, pause):
         if self.is_dead:
             self.do_dead()
+        elif pause:
+            pass
         else:
             if not self.on_ladder:
                 self.y_speed += min(1, (self.fall_count / FPS) * self.gravity)

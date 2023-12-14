@@ -40,6 +40,7 @@ class Enemy(pygame.sprite.Sprite):
         self.health = self.__enemy_configs['health']
         self.is_dead = False
         self.killed = False
+        self.pause = False
  
     def constraint(self):  # Ajusta al jugador a los limites de la pantalla
         if self.move_right:
@@ -89,18 +90,22 @@ class Enemy(pygame.sprite.Sprite):
                 self.animacion_contador = 0
                 self.time_move = 0
 
-    def update(self, delta_ms, screen: pygame.surface.Surface):
-        if self.health > 0:
+    def update(self, delta_ms, screen: pygame.surface.Surface, pause):
+        if self.health > 0 and not self.pause:
             self.do_movement(delta_ms)
             self.draw(screen)
             self.clock.tick(60)
+        elif pause:
+            self.draw(screen)
         else:
             self.do_dead(delta_ms)
             self.draw(screen)
             self.clock.tick(60)
             if not self.is_dead:
-                chanel_dead = pygame.mixer.Channel(3)
+                chanel_dead = pygame.mixer.Channel(6)
                 chanel_dead.play(self.sound_dead)
                 self.is_dead = True
+    
     def draw(self, screen: pygame.surface.Surface):
         screen.blit(self.image, self.rect)
+        
